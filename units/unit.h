@@ -86,13 +86,13 @@ namespace Unit {
      * Test for static member name, use name() otherwise.
      */
     template <class u>
-    const char * const unit_name( int i = sizeof(u::name) ) {
+    const char * unit_name( int i = sizeof(u::name) ) {
       (void)i;
       return u::name;
     }
 
     template <class u>
-    const char * const unit_name( void* ) {
+    const char * unit_name( void* ) {
       return u::name();
     }
 
@@ -107,7 +107,7 @@ namespace Unit {
       static const char * const name;
 
       template <class u>
-      static const char * const getName() {
+      static const char * getName() {
         return unit_name<u>();
       }
   };
