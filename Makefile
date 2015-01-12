@@ -2,7 +2,7 @@
 CXX = g++
 CFLAGS = -Wall -Wextra -O23
 
-OBJS = units/unit.o units/si_units.o units/imperial_units.o
+OBJS = units/unit.o units/si_units.o units/si_derived_units.o units/imperial_units.o
 DEPS = $(OBJS:%.o=%.d)
 
 .PHONY: default all
