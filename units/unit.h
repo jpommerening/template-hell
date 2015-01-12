@@ -87,6 +87,7 @@ namespace Unit {
      */
     template <class u>
     const char * const unit_name( int i = sizeof(u::name) ) {
+      (void)i;
       return u::name;
     }
 

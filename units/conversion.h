@@ -1,7 +1,5 @@
 #ifndef _CONVERSION__H
 #define _CONVERSION__H
-/* pow() */
-#include <cmath>
 
 /**
  * Basic conversions.
@@ -117,29 +115,37 @@ class linear_conversion {
     }
 };
 
-/**
- * Exponential conversion. Application is multiplication
- * with e powers of base b.
- */
-template <int b, int e=0>
-class exponential_conversion {
-  public:
-    template <typename v>
-    static v apply( const v value ) {
-      return value * pow( b, e );
-    }
+namespace {
+  template <typename v, int b=10, int e=0, bool p=(e>=0)>
+  struct pow;
 
-    template <typename v>
-    static v revert( const v value ) {
-      return value * pow( b, -e );
-    }
-};
+  template <typename v, int b>
+  struct pow< v, b, 0 > {
+    static const v value = 1.;
+  };
+
+  template <typename v, int b, int e>
+  struct pow< v, b, e, true > {
+    static const v value = b * pow<v, b, e-1>::value;
+  };
+
+  template <typename v, int b, int e>
+  struct pow< v, b, e, false > {
+    static const v value = b / pow<v, b, 1-e>::value;
+  };
+}
 
 /**
- * Decimal conversion. Exponential conversion with base 10.
+ * Decimal conversion.
  */
-template <int e=0>
-class decimal_conversion : public exponential_conversion<10,e> {};
+template <int e=0, bool p=(e>=0)>
+class decimal_conversion;
+
+template <int e>
+class decimal_conversion< e, true > : public linear_conversion< 1, pow<long long, 10, e >::value > {};
+
+template <int e>
+class decimal_conversion< e, false > : public linear_conversion< pow<long long, 10, -e >::value, 1 > {};
 
 /**
  * Template specializations for reduced overhead.

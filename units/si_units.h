@@ -55,7 +55,7 @@ namespace SIUnits {
     template <class u, int i>
     class SIPrefix : public Unit::unit<
       typename u::quantity,
-      Conversion::compound_conversion< typename u::conversion, Conversion::decimal_conversion<-i> > /* inverted? y? */
+      Conversion::compound_conversion< typename u::conversion, Conversion::decimal_conversion<i> >
     > {
       public:
         static const char * const name;
