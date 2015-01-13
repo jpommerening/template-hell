@@ -1,4 +1,5 @@
 #include "unit.h"
 
-template <>
-const char * const Unit::unit<>::name = "";
+namespace Unit {
+  template <> const char * const unit<>::name = "";
+}

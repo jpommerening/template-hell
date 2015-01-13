@@ -215,8 +215,10 @@ namespace Unit {
    * @{
    */
 
+  /*
   template <class u1, class u2>
   class multiply< unit<>, do_multiply<u1,u2> > { public: typedef typename multiply<u1,u2>::type type; };
+  */
 
   template <class u1, class u2, class u3>
   class multiply< u1, do_multiply<u2,u3> > { public: typedef typename multiply< typename multiply<u1,u2>::type, u3 >::type type; };
@@ -283,6 +285,7 @@ namespace Unit {
   template <class u1, class u2, class u3>
   class divide< do_multiply<u1,u2>, do_multiply<u2,u3> > { public: typedef typename divide< u1, u3 >::type type; };
 
+  /*
   template <class u1, class u2>
   class divide< do_multiply<u1,u2>, do_multiply<u2,u2> > { public: typedef typename divide< u1, u2 >::type type; };
 
@@ -291,6 +294,7 @@ namespace Unit {
 
   template <class u>
   class divide< do_multiply<u,u>, do_multiply<u,u> > { public: typedef unit<> type; };
+  */
 
   /** @} */
 
