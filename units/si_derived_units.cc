@@ -11,7 +11,7 @@ namespace SIUnits {
   template <> const char * const W::name = "W";
   template <> const char * const C::name = "C";
   template <> const char * const F::name = "F";
-  template <> const char * const ohms::name = "";
+  template <> const char * const ohms::name = "Ω";
   template <> const char * const S::name = "S";
   template <> const char * const Wb::name = "Wb";
   template <> const char * const T::name = "T";
@@ -20,7 +20,7 @@ namespace SIUnits {
   template <> const char * const lx::name = "lx";
   template <> const char * const Bq::name = "Bq";
   template <> const char * const Gy::name = "Gy";
-/*template <> const char * const Sv::name = "Sv";*/
+  template <> const char * const Sv::name = "Sv";
   template <> const char * const kat::name = "kat";
 
 }
