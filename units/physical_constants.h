@@ -47,7 +47,7 @@ namespace PhysicalConstants {
   template <typename v>
   class u0 : public Constant< v, NpA2 > {
     public:
-      u0() : Constant< v, NpA2 >( MathematicalConstants::pi< v >() * 4e-7 ) {};
+      u0() : Constant< v, NpA2 >( MathematicalConstants::pi< v >() * v(4e-7) ) {};
   };
 
   /** Vacuum permittivity */
@@ -61,28 +61,28 @@ namespace PhysicalConstants {
   template <typename v>
   class G : public Constant< v, m3pkgs2 > {
     public:
-      G() : Constant< v, m3pkgs2 >( (v) 6.67384e-11 ) {};
+      G() : Constant< v, m3pkgs2 >( v(6.67384e-11) ) {};
   };
 
   /** Planck constant */
   template <typename v>
   class h : public Constant< v, Js > {
     public:
-      h() : Constant< v, Js >( (v) 6.62606957e-34 ) {};
+      h() : Constant< v, Js >( v(6.62606957e-34) ) {};
   };
 
   /** Reduced Planck constant */
   template <typename v>
   class h_ : public Constant< v, Js > {
     public:
-      h_() : Constant< v, Js >( (v) 1.054571726e-34 ) {};
+      h_() : Constant< v, Js >( v(1.054571726e-34) ) {};
   };
 
   /** Boltzmann constant */
   template <typename v>
   class kB : public Constant< v, JpK > {
     public:
-      kB() : Constant< v, JpK >( (v) 1.3806488e-23 ) {};
+      kB() : Constant< v, JpK >( v(1.3806488e-23) ) {};
   };
 
 /**
