@@ -6,7 +6,7 @@ namespace SIUnits {
 
   namespace {
      typedef kilo<g> kg;
-     typedef typename Unit::multiply<m,m>::type qm;
+     typedef typename Unit::multiply<m,m>::type sqm;
      typedef typename Unit::divide<m, Unit::multiply<s,s>::type>::type mps2;
   };
 
@@ -19,27 +19,27 @@ namespace SIUnits {
    * A Bequerel value may turn out to be in Hertz.
    */
 
-  typedef Unit::do_divide<Unit::unit<>,s> Hz;
-  typedef Unit::do_alias< Unit::unit<>, __LINE__ > rad;
-  typedef Unit::do_alias< Unit::unit<>, __LINE__ > sr;
-  typedef Unit::do_multiply< kg, mps2 > N;
-  typedef Unit::do_divide< Unit::unwind<N>::type, qm > Pa;
-  typedef Unit::do_multiply< Unit::unwind<N>::type, m > J;
-  typedef Unit::do_divide< Unit::unwind<J>::type, s > W;
-  typedef Unit::do_multiply< s, Unit::unwind<A>::type > C;
-  typedef Unit::do_divide< Unit::unwind<W>::type, A > V;
-  typedef Unit::do_divide< Unit::unwind<C>::type, Unit::unwind<V>::type > F;
-  typedef Unit::do_divide< Unit::unwind<V>::type, A > ohms;
-  typedef Unit::do_divide< Unit::unwind<A>::type, Unit::unwind<V>::type > S;
-  typedef Unit::do_divide< Unit::unwind<J>::type, A > Wb;
-  typedef Unit::do_multiply< Unit::unwind<V>::type, Unit::divide< s, qm >::type > T;
-  typedef Unit::do_multiply< Unit::unwind<V>::type, Unit::divide< s, A >::type > H;
-  typedef Unit::do_multiply< cd, sr > lm;
-  typedef Unit::do_divide< Unit::unwind<lm>::type, Unit::unwind<sr>::type > lx;
-  typedef Unit::do_alias< Hz, __LINE__ > Bq;
-  typedef Unit::do_divide< Unit::unwind<J>::type, kg > Gy;
-  typedef Unit::do_alias< Gy, __LINE__ > Sv;
-  typedef Unit::do_divide< mol, s > kat;
+  typedef typename Unit::divide<Unit::unit<>,s>::type Hz;
+  typedef typename Unit::alias< Unit::unit<>, __LINE__ >::type rad;
+  typedef typename Unit::alias< Unit::unit<>, __LINE__ >::type sr;
+  typedef typename Unit::multiply< kg, mps2 >::type N;
+  typedef typename Unit::divide< Unit::unwind<N>::type, sqm >::type Pa;
+  typedef typename Unit::multiply< Unit::unwind<N>::type, m >::type J;
+  typedef typename Unit::divide< Unit::unwind<J>::type, s >::type W;
+  typedef typename Unit::multiply< s, Unit::unwind<A>::type >::type C;
+  typedef typename Unit::divide< Unit::unwind<W>::type, A >::type V;
+  typedef typename Unit::divide< Unit::unwind<C>::type, Unit::unwind<V>::type >::type F;
+  typedef typename Unit::divide< Unit::unwind<V>::type, A >::type ohms;
+  typedef typename Unit::divide< Unit::unwind<A>::type, Unit::unwind<V>::type >::type S;
+  typedef typename Unit::divide< Unit::unwind<J>::type, A >::type Wb;
+  typedef typename Unit::multiply< Unit::unwind<V>::type, Unit::divide< s, sqm >::type >::type T;
+  typedef typename Unit::multiply< Unit::unwind<V>::type, Unit::divide< s, A >::type >::type H;
+  typedef typename Unit::alias< cd, __LINE__ >::type lm;
+  typedef typename Unit::divide< Unit::unwind<lm>::type, sqm >::type lx;
+  typedef typename Unit::alias< Hz, __LINE__ >::type Bq;
+  typedef typename Unit::divide< Unit::unwind<J>::type, kg >::type Gy;
+  typedef typename Unit::alias< Gy, __LINE__ >::type Sv;
+  typedef typename Unit::divide< mol, s >::type kat;
 
 }
 
