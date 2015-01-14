@@ -7,6 +7,7 @@ namespace SIUnits {
   namespace {
      typedef kilo<g> kg;
      typedef typename Unit::multiply<m,m>::type qm;
+     typedef typename Unit::divide<m, Unit::multiply<s,s>::type>::type mps2;
   };
 
   /**
@@ -21,7 +22,7 @@ namespace SIUnits {
   typedef Unit::do_divide<Unit::unit<>,s> Hz;
   typedef Unit::do_alias< Unit::unit<>, __LINE__ > rad;
   typedef Unit::do_alias< Unit::unit<>, __LINE__ > sr;
-  typedef Unit::do_multiply< kg, Unit::divide< m, Unit::multiply<s,s>::type >::type > N;
+  typedef Unit::do_multiply< kg, mps2 > N;
   typedef Unit::do_divide< Unit::unwind<N>::type, qm > Pa;
   typedef Unit::do_multiply< Unit::unwind<N>::type, m > J;
   typedef Unit::do_divide< Unit::unwind<J>::type, s > W;

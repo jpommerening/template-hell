@@ -308,6 +308,9 @@ namespace Unit {
   template <class u>
   class unwind { public: typedef u type; };
 
+  template <class u, int i>
+  class unwind< do_alias<u, i> > { public: typedef u type; };
+
   template <class u1, class u2>
   class unwind< do_multiply<u1,u2> > { public: typedef typename multiply<u1,u2>::type type; };
 

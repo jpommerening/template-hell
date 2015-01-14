@@ -87,7 +87,14 @@ class Value {
       return value_;
     }
     */
+
 };
+
+template <typename v, typename u>
+std::ostream& operator<<( std::ostream& os, const Value< v, u >& value ) {
+  os << value.value() << u::name;
+  return os;
+}
 
 template <typename v, typename u=Unit::unit<> >
 class Constant : public Value< v, u> {
