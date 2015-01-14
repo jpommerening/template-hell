@@ -11,7 +11,7 @@ namespace SIUnits {
   template <> const char * const W::name = "W";
   template <> const char * const C::name = "C";
   template <> const char * const F::name = "F";
-  template <> const char * const ohms::name = "Ω";
+  template <> const char * const ohm::name = "Ω";
   template <> const char * const S::name = "S";
   template <> const char * const Wb::name = "Wb";
   template <> const char * const T::name = "T";
