@@ -13,7 +13,7 @@ namespace Unit {
   template <> const char * const ::SIUnits::W::name = "W";
   template <> const char * const ::SIUnits::C::name = "C";
   template <> const char * const ::SIUnits::F::name = "F";
-  template <> const char * const ::SIUnits::ohms::name = "";
+  template <> const char * const ::SIUnits::ohm::name = "Ω";
   template <> const char * const ::SIUnits::S::name = "S";
   template <> const char * const ::SIUnits::Wb::name = "Wb";
   template <> const char * const ::SIUnits::T::name = "T";
@@ -24,4 +24,5 @@ namespace Unit {
   template <> const char * const ::SIUnits::Gy::name = "Gy";
   template <> const char * const ::SIUnits::Sv::name = "Sv";
   template <> const char * const ::SIUnits::kat::name = "kat";
-};
+
+}

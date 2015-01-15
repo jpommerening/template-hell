@@ -141,6 +141,129 @@ namespace Unit {
   };
 
   /**
+   * Helpers
+   */
+
+  namespace {
+    /* "If"s */
+    template < bool cond, class T=void >
+    struct enable_if {};
+
+    template < class T >
+    struct enable_if< true, T > { typedef T type; };
+
+    template < bool cond, class T, class F >
+    struct conditional { typedef T type; };
+
+    template < class T, class F >
+    struct conditional< false, T, F > { typedef F type; };
+
+    /** /ifs */
+
+    template <class f, class u>
+    struct is_factor {
+      static const bool value = false;
+    };
+
+    template <class f>
+    struct is_factor< f, f > {
+      static const bool value = true;
+    };
+
+    template <class f, class u1, class u2>
+    struct is_factor< f, do_multiply<u1,u2> > {
+      static const bool value = is_factor< f, u1 >::value || is_factor< f, u2 >::value;
+    };
+
+    template <class f, class u1, class u2>
+    struct is_factor< f, do_divide<u1,u2> > {
+      static const bool value = is_factor< f, u1 >::value;
+    };
+
+    template <class f, class u>
+    struct is_divisor {
+      static const bool value = false;
+    };
+
+    template <class f, class u1, class u2>
+    struct is_divisor< f, do_multiply<u1,u2> > {
+      static const bool value = is_divisor< f, u1 >::value || is_divisor< f, u2 >::value;
+    };
+
+    template <class f, class u1, class u2>
+    struct is_divisor< f, do_divide<u1,u2> > {
+      static const bool value = is_factor< f, u2 >::value;
+    };
+
+    template <class f, class u>
+    struct remove_factor {
+      typedef void type;
+    };
+
+    template <class f>
+    struct remove_factor< f, f > {
+      typedef unit<> type;
+    };
+
+    template <class f, class u1>
+    struct remove_factor< f, do_multiply<f,u1> > {
+      typedef u1 type;
+    };
+
+    template <class f, class u1>
+    struct remove_factor< f, do_multiply<u1,f> > {
+      typedef u1 type;
+    };
+
+    template <class d, class u>
+    struct remove_divisor {
+      typedef void type;
+    };
+
+    template <class d, class u1>
+    struct remove_divisor< d, do_divide<u1,d> > {
+      typedef u1 type;
+    };
+
+    template <class f, class u1, class u2>
+    struct remove_factor< f, do_multiply<u1,u2> > {
+      typedef typename conditional<
+        is_factor<f,u1>::value,
+        do_multiply<typename remove_factor<f,u1>::type, u2>,
+        do_multiply<u1, typename remove_factor<f,u2>::type >
+      >::type type;
+    };
+
+    template <class f, class u1, class u2>
+    struct remove_factor< f, do_divide<u1,u2> > {
+      typedef typename conditional<
+        is_factor<f,u1>::value,
+        do_divide<typename remove_factor<f,u1>::type, u2>,
+        do_divide<u1, typename remove_divisor<f,u2>::type >
+      >::type type;
+    };
+
+    template <class f, class u1, class u2>
+    struct remove_divisor< f, do_multiply<u1,u2> > {
+      typedef typename conditional<
+        is_divisor<f,u1>::value,
+        do_multiply<typename remove_divisor<f,u1>::type, u2>,
+        do_multiply<u1, typename remove_divisor<f,u2>::type >
+      >::type type;
+    };
+
+    template <class f, class u1, class u2>
+    struct remove_divisor< f, do_divide<u1,u2> > {
+      typedef typename conditional<
+        is_divisor<f,u1>::value,
+        do_divide<typename remove_divisor<f,u1>::type, u2>,
+        do_divide<u1, typename remove_factor<f,u2>::type >
+      >::type type;
+    };
+
+  }
+
+  /**
    * Alias units (for example rad = unit<>
    */
   template <class u, int i>
@@ -150,19 +273,28 @@ namespace Unit {
    * Type builder for multiplication.
    */
   template <class u1, class u2>
-  class multiply { public: typedef do_multiply<u1, u2> type; };
+  class multiply {
+    public:
+      typedef typename conditional<is_divisor<u1, u2>::value, typename remove_divisor<u1, u2>::type, do_multiply<u1, u2> >::type type;
+  };
 
   /**
    * Type builder for division.
    */
   template <class u1, class u2>
-  class divide { public: typedef do_divide<u1, u2> type; };
+  class divide {
+    public:
+      typedef typename conditional<is_factor<u2, u1>::value, typename remove_factor<u2, u1>::type, do_divide<u1, u2> >::type type;
+  };
 
   /**
    * Type builder for exponentiation.
    */
   template <class u, int n=1>
-  class pow { public: typedef do_multiply< typename pow<u, n-1>::type, u> type; };
+  class pow {
+    public:
+      typedef do_multiply< typename pow<u, n-1>::type, u> type;
+  };
 
   /**
    * Terminal rules
@@ -176,79 +308,11 @@ namespace Unit {
   template <class u>
   class multiply< unit<>, u > { public: typedef u type; };
 
-  template <class u1, class u2>
-  class multiply< do_divide<u1,u2>, u2 > { public: typedef u1 type; };
-
-  template <class u1, class u2>
-  class multiply< u1, do_divide<u2,u1> > { public: typedef u2 type; };
-
   template <class u>
   class divide< u, unit<> > { public: typedef u type; };
 
   template <class u>
   class divide< u, u > { public: typedef unit<> type; };
-
-  template <class u>
-  class divide< do_multiply<u,u>, u > { public: typedef u type; };
-
-  template <class u1, class u2>
-  class divide< do_multiply<u1,u2>, u2 > { public: typedef u1 type; };
-
-  template <class u1, class u2>
-  class divide< do_multiply<u1,u2>, u1 > { public: typedef u2 type; };
-
-  template <class u1, class u2>
-  class divide< u1, do_multiply<u1,u2> > { public: typedef typename divide< unit<>, u2 >::type type; };
-
-  template <class u1, class u2>
-  class divide< u1, do_multiply<u2,u1> > { public: typedef typename divide< unit<>, u2 >::type type; };
-
-  /** @} */
-
-  /**
-   * Normalization rules.
-   * These rules serve to simplify and disambiguate formulae.
-   * Normalization follows the goal to reduce the whole term to a minimal
-   * number of divisions which happen at the outermost level.
-   * There is probably a solution with less template specializations,
-   * but this will do for now.
-   * @{
-   */
-
-  /*
-  template <class u1, class u2>
-  class multiply< unit<>, do_multiply<u1,u2> > { public: typedef typename multiply<u1,u2>::type type; };
-  */
-
-  template <class u1, class u2, class u3>
-  class multiply< u1, do_multiply<u2,u3> > { public: typedef typename multiply< typename multiply<u1,u2>::type, u3 >::type type; };
-
-  template <class u1, class u2, class u3>
-  class multiply< do_divide<u1,u2>, u3 > { public: typedef typename divide< typename multiply<u1,u3>::type, u2 >::type type; };
-
-  template <class u1, class u2, class u3>
-  class multiply< u1, do_divide<u2,u3> > { public: typedef typename divide< u1, typename multiply<u2,u3>::type >::type type; };
-
-  template <class u1, class u2, class u3>
-  class multiply< do_divide<u1,u2>, do_divide<u3,u1> > { public: typedef typename divide<u3,u2>::type type; };
-
-  template <class u1, class u2, class u3>
-  class multiply< do_divide<u1,u2>, do_divide<u2,u3> > { public: typedef typename divide<u1,u3>::type type; };
-
-  template <class u1, class u2, class u3, class u4>
-  class multiply< do_divide<u1,u2>, do_divide<u3,u4> > { public: typedef typename divide< typename multiply<u1,u3>::type, typename multiply<u2,u4>::type >::type type; };
-
-  template <class u1, class u2, class u3>
-  class divide< u1, do_divide<u2,u3> > { public: typedef typename divide< typename multiply<u1,u3>::type, u2 >::type type; };
-
-  template <class u1, class u2, class u3>
-  class divide< do_divide< u1, u2 >, u3 > { public: typedef typename divide< u1, typename multiply<u2,u3>::type >::type type; };
-
-  template <class u1, class u2, class u3, class u4>
-  class divide< do_divide< u1, u2 >, do_divide< u3, u4 > > { public: typedef typename divide< typename multiply<u1,u4>::type, typename multiply<u2,u3>::type >::type type; };
-
-  template <class u>
-  class pow<u,2> { public: typedef typename multiply<u,u>::type type; };
 
   template <class u>
   class pow<u,1> { public: typedef u type; };
@@ -259,42 +323,28 @@ namespace Unit {
   /** @} */
 
   /**
-   * Sorting rules.
-   * We want to sort subsequent multiplications in a predictable manner.
-   * @{
-   */
-
-  /** @} */
-
-  /**
-   * Equivalent fraction rules.
-   * Once divisions only contain multiplications on both sides, factors
-   * that appear on both sides can be eliminated.
+   * Normalization rules
+   * Make sure, there is just one division on the outside
    * @{
    */
 
   template <class u1, class u2, class u3>
-  class divide< do_multiply<u1,u2>, do_multiply<u3,u1> > { public: typedef typename divide< u2, u3 >::type type; };
+  class multiply< do_divide<u1,u2>, u3 > {
+    public:
+      typedef typename divide< typename multiply<u1,u3>::type, u2 >::type type;
+  };
 
   template <class u1, class u2, class u3>
-  class divide< do_multiply<u1,u2>, do_multiply<u3,u2> > { public: typedef typename divide< u1, u3 >::type type; };
+  class multiply< u1, do_divide<u2,u3> > {
+    public:
+      typedef typename divide< typename multiply<u1,u2>::type, u3 >::type type;
+  };
 
-  template <class u1, class u2, class u3>
-  class divide< do_multiply<u1,u2>, do_multiply<u1,u3> > { public: typedef typename divide< u2, u3 >::type type; };
-
-  template <class u1, class u2, class u3>
-  class divide< do_multiply<u1,u2>, do_multiply<u2,u3> > { public: typedef typename divide< u1, u3 >::type type; };
-
-  /*
-  template <class u1, class u2>
-  class divide< do_multiply<u1,u2>, do_multiply<u2,u2> > { public: typedef typename divide< u1, u2 >::type type; };
-
-  template <class u1, class u2>
-  class divide< do_multiply<u1,u2>, do_multiply<u1,u1> > { public: typedef typename divide< u2, u1 >::type type; };
-
-  template <class u>
-  class divide< do_multiply<u,u>, do_multiply<u,u> > { public: typedef unit<> type; };
-  */
+  template <class u1, class u2, class u3, class u4>
+  class multiply< do_divide<u1,u2>, do_divide<u3,u4> > {
+    public:
+      typedef typename divide< typename multiply<u1,u4>::type, typename multiply<u2,u3>::type >::type type;
+  };
 
   /** @} */
 
@@ -312,11 +362,14 @@ namespace Unit {
   template <class u>
   class unwind { public: typedef u type; };
 
-  template <class u1, class u2>
-  class unwind< do_multiply<u1,u2> > { public: typedef typename multiply<u1,u2>::type type; };
+  template <class u, int i>
+  class unwind< do_alias<u, i> > { public: typedef typename unwind<u>::type type; };
 
   template <class u1, class u2>
-  class unwind< do_divide<u1,u2> > { public: typedef typename divide<u1,u2>::type type; };
+  class unwind< do_multiply<u1,u2> > { public: typedef typename multiply<typename unwind<u1>::type, typename unwind<u2>::type>::type type; };
+
+  template <class u1, class u2>
+  class unwind< do_divide<u1,u2> > { public: typedef typename divide<typename unwind<u1>::type, typename unwind<u2>::type>::type type; };
 
 }
 

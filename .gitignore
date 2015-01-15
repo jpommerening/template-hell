@@ -1,8 +1,5 @@
 # Compiled Object files
-*.slo
-*.lo
 *.o
-*.obj
 
 # Dependency files, Precompiled Headers,
 *.d
@@ -14,9 +11,6 @@
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-
 # Compiled Static libraries
 *.lai
 *.la
@@ -27,3 +21,6 @@
 *.exe
 *.out
 *.app
+
+# I'm an idiot
+:wq
