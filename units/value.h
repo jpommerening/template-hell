@@ -16,14 +16,14 @@ class Value {
   public:
 
     explicit Value( v value ) : value_( value ) {
-      std::cout << "Constructed value: " << value_ << u::name << " from scalar.\n";
+      //std::cout << "Constructed value: " << value_ << u::name << " from scalar.\n";
     }
 
     Value( const Value &value ) : value_( value.value_ ) {};
 
     template <class u2>
     Value( const Value<v,u2> &value ) : value_( Unit::checked_conversion< u2, u >::apply( value.value() ) ) {
-      std::cout << "Constructed value: " << value_ << u::name << " from object.\n";
+      //std::cout << "Constructed value: " << value_ << u::name << " from object.\n";
     }
 
     Value<v,u>& operator+=( const Value<v,u> &rhs ) {
@@ -49,14 +49,14 @@ class Value {
     const v value() const { return value_; }
 
     const Value<v,u> operator+( const Value<v,u> &rhs ) const {
-      std::cout << "Add values: " << value_ << u::name << " + " << rhs.value_ << u::name << "\n";
+      //std::cout << "Add values: " << value_ << u::name << " + " << rhs.value_ << u::name << "\n";
       Value<v,u> result = *this;
       result += rhs;
       return result;
     }
 
     const Value<v,u> operator-( const Value<v,u> &rhs ) const {
-      std::cout << "Substract values: " << value_ << u::name << " - " << rhs.value_ << u::name << "\n";
+      //std::cout << "Substract values: " << value_ << u::name << " - " << rhs.value_ << u::name << "\n";
       Value<v,u> result = *this;
       result -= rhs;
       return result;
@@ -64,13 +64,13 @@ class Value {
 
     template<class u2>
     const Value< v, typename Unit::multiply<u,u2>::type > operator*( const Value<v,u2> &rhs ) const {
-      std::cout << "Multiply values: " << value_ << u::name << " * " << rhs.value() << u2::name << "\n";
+      //std::cout << "Multiply values: " << value_ << u::name << " * " << rhs.value() << u2::name << "\n";
       return Value< v, typename Unit::multiply<u,u2>::type >( value_ * rhs.value() );
     }
 
     template<class u2>
     const Value< v, typename Unit::divide<u,u2>::type > operator/( const Value<v,u2> &rhs ) const {
-      std::cout << "Divide values: " << value_ << u::name << " / " << rhs.value() << u2::name << "\n";
+      //std::cout << "Divide values: " << value_ << u::name << " / " << rhs.value() << u2::name << "\n";
       return Value< v, typename Unit::divide<u,u2>::type >( value_ / rhs.value() );
     }
 
